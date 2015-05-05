@@ -1,0 +1,55 @@
+<!-- sometimes I use html semantically incorrectly when prototyping... ;) -->
+<!-- what's up Chris/Max -->
+<div class="container"> 
+  <div class="jumbotron">
+  <div style="text-align:center;"><i class="fa fa-code-fork fa-5x"></i></div>
+    <h1 class="text-center">T.I.M.E.R.</h1>
+    <p class="text-center"><small>Made in < 1 hour for two fine gentlemen: Maxime Santerre and Chris Yammine.</small></p>
+    <h1 style="text-align:center;"><span id="timer"></span></h1>
+    <button class="center-block btn btn-default btn-lg" id="the-btn">The Button</i></button>
+    <br>
+    <p class="text-center"><small><small>Every button click is preserved in the halls below.</small></small></p>
+    
+    <div class="text-center" id="the-hall">
+    <% @resources.each do |resource|%>
+      <span><%= resource.value %></span>
+    <% end %>
+    </div>  
+
+  </div>
+</div>
+
+<script>
+$( document ).ready(function() {
+  var time = 10;
+
+  var foobar = function() {
+    
+    $('#timer').text(time);
+
+    if (time === 0) {
+
+        time = 10;
+    } else {
+
+        time -= 1;
+    }
+    window.setTimeout(foobar, 1000);
+  }
+
+  $( "#the-btn" ).click(function() {
+    $.ajax({
+      method: "POST",
+      url: "/resources",
+      dataType : 'json',
+      data: { value: $('#timer').text()},
+      success : function(e) {
+        console.log(e);
+        $( "#the-hall" ).prepend( "<span> "+e+"</span>" );
+      }
+    });  
+  });
+
+  foobar();
+});
+</script>
